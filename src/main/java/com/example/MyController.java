@@ -92,7 +92,8 @@ public class MyController {
 	@Path("search")
 	public String postSearch(@FormParam("keyword") String keyword) {
 		messagesDAO.search(keyword);
-		return "list.jsp";
+		// messages が @RedirectScoped なので、リダイレクト先でも参照可能。
+		return "redirect:list";
 	}
 
 }
