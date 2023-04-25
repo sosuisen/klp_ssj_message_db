@@ -3,14 +3,14 @@ package com.example.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
+import jakarta.mvc.RedirectScoped;
 
 /**
- * MessageDAO から JSP へのデータ受け渡しを担うだけなので、
- * @RequestScoped です。 
+ * MyControllerからJSPへのデータ受け渡しを担います。
+ * リダイレクト後のページで用いることがあるので @RedirectScoped とします。
  */
-@RequestScoped
+@RedirectScoped
 @Named
 public class Messages extends ArrayList<MessageDTO> implements Serializable {
 }
