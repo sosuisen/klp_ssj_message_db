@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
 import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -79,11 +80,19 @@ public class MyController {
 	@Path("login")
 	public String postLogin(@BeanParam UserDTO userDTO) {
 		if (userDTO.getName().equals("kcg") && userDTO.getPassword().equals("foo")) {
-			loginUser.setName(userDTO.getName());			
+			loginUser.setName(userDTO.getName());
 			return "redirect:list";
 		}
 
 		errorBean.setMessage("ユーザ名またはパスワードが異なります");
 		return "redirect:login";
 	}
+
+	@POST
+	@Path("search")
+	public String postSearch(@FormParam("keyword") String keyword) {
+		messagesDAO.search(keyword);
+		return "list.jsp";
+	}
+
 }
