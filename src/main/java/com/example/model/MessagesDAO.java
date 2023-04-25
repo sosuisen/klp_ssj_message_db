@@ -22,10 +22,13 @@ public class MessagesDAO {
 	@Resource(lookup = "jdbc/__default")
 	private DataSource ds;
 
+	// JSP側へデータを渡すために用いる。
 	@Inject
 	private Messages messages;
 
 	public void getAll() {
+		// リダイレクト先で呼ばれた場合は無視する。
+		if (messages.size() > 0) return;
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages");) {
@@ -42,6 +45,7 @@ public class MessagesDAO {
 	}
 
 	public void search(String keyword) {
+		if (messages.size() > 0) return;
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages WHERE message LIKE ?");) {
