@@ -23,19 +23,19 @@ import lombok.NoArgsConstructor;
 public class MyController {
 	private final MessagesDAO messagesDAO;
 
+	private final Models models;
+
 	private final LoginUser loginUser;
 
 	private final ErrorBean errorBean;
 
 	@Inject
-	public MyController(MessagesDAO messagesDAO, LoginUser loginUser, ErrorBean errorBean) {
+	public MyController(Models models, MessagesDAO messagesDAO, LoginUser loginUser, ErrorBean errorBean) {
+		this.models = models;
 		this.messagesDAO = messagesDAO;
 		this.loginUser = loginUser;
 		this.errorBean = errorBean;
 	}
-
-	@Inject
-	private Models models;
 
 	@GET
 	public String home() {
