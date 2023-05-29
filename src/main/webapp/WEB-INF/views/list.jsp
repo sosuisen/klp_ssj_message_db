@@ -9,8 +9,7 @@
 <title>メッセージの累積</title>
 </head>
 <body>
-	${loginUser.name}さん、こんにちは！
-	<br>
+	${loginUserModel.name}さん、こんにちは！<br>
 	<form action="list" method="POST">
 		メッセージ：<input type="text" name="message">
 		<button>送信</button>
@@ -24,7 +23,7 @@
 	</form>
 	<hr>
 	<h1>メッセージ一覧</h1>
-	<c:forEach var="mes" items="${messages}">
+	<c:forEach var="mes" items="${messagesModel}">
 		<div>${mes.name}:${mes.message}
 	</c:forEach>
 	<p>

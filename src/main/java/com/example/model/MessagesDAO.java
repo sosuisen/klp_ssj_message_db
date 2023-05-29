@@ -24,17 +24,17 @@ public class MessagesDAO {
 	@Resource(lookup = "jdbc/__default")
 	private DataSource ds;
 
-	// JSP側へデータを渡すために用いる。
-	private final Messages messages;
+	// getAll()とserarch() のとき、JSP側へデータを渡すために用いる。
+	private final MessagesModel messagesModel;
 
 	@Inject
-	public MessagesDAO(Messages messages) {
-		 this.messages = messages;
+	public MessagesDAO(MessagesModel messagesModel) {
+		 this.messagesModel = messagesModel;
 	}
 
 	public void getAll() {
 		// リダイレクト先で呼ばれた場合は無視する。
-		if (messages.size() > 0) return;
+		if (messagesModel.size() > 0) return;
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages");) {
@@ -43,7 +43,7 @@ public class MessagesDAO {
 				int myId = rs.getInt("id");
 				String name = rs.getString("name");
 				String message = rs.getString("message");
-				messages.add(new MessageDTO(myId, name, message));
+				messagesModel.add(new MessageDTO(myId, name, message));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class MessagesDAO {
 	}
 
 	public void search(String keyword) {
-		if (messages.size() > 0) return;
+		if (messagesModel.size() > 0) return;
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages WHERE message LIKE ?");) {
@@ -64,7 +64,7 @@ public class MessagesDAO {
 				int myId = rs.getInt("id");
 				String name = rs.getString("name");
 				String message = rs.getString("message");
-				messages.add(new MessageDTO(myId, name, message));
+				messagesModel.add(new MessageDTO(myId, name, message));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
