@@ -1,10 +1,11 @@
 package com.example;
 
 import com.example.model.ErrorBean;
-import com.example.model.LoginUser;
+import com.example.model.LoginUserModel;
 import com.example.model.MessageDTO;
 import com.example.model.MessagesDAO;
 import com.example.model.UserDTO;
+import com.example.model.UsersModel;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -16,6 +17,17 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import lombok.NoArgsConstructor;
 
+/**
+ * Jakarta MVCのコンロトーラクラスです。@Controllerアノテーションを付けてください。
+ * 
+ * 加えて、コントローラクラスは必ず@RequestScopedを付けてCDI Beanにします。
+ * 
+ * CDI beanには引数のないコンストラクタが必須なので、
+ * Lombokの@NoArgsConstructorで空っぽのコンストラクタを作成します。
+ * ただし、このクラスは宣言時に初期化してないfinalフィールドを持つため、
+ * このままだとフィールドが初期化されない可能性があってコンパイルエラーとなります。
+ * これを防ぐには(force=true)指定が必要です。
+ */
 @Controller
 @RequestScoped
 @NoArgsConstructor(force = true)
@@ -25,16 +37,20 @@ public class MyController {
 
 	private final Models models;
 
-	private final LoginUser loginUser;
+	private final LoginUserModel loginUserModel;
 
 	private final ErrorBean errorBean;
+	
+	private final UsersModel usersModel;
 
 	@Inject
-	public MyController(Models models, MessagesDAO messagesDAO, LoginUser loginUser, ErrorBean errorBean) {
+	public MyController(Models models, MessagesDAO messagesDAO, LoginUserModel loginUserModel,
+		ErrorBean errorBean, UsersModel usersModel) {
 		this.models = models;
 		this.messagesDAO = messagesDAO;
-		this.loginUser = loginUser;
+		this.loginUserModel = loginUserModel;
 		this.errorBean = errorBean;
+		this.usersModel = usersModel;
 	}
 
 	@GET
@@ -46,7 +62,7 @@ public class MyController {
 	@GET
 	@Path("list")
 	public String getMessage() {
-		if (loginUser.getName() == null) {
+		if (loginUserModel.getName() == null) {
 			return "redirect:login";
 		}
 		messagesDAO.getAll();
@@ -56,7 +72,7 @@ public class MyController {
 	@POST
 	@Path("list")
 	public String postMessage(@BeanParam MessageDTO mes) {
-		mes.setName(loginUser.getName());
+		mes.setName(loginUserModel.getName());
 		messagesDAO.create(mes);
 		return "redirect:list";
 	}
@@ -71,18 +87,19 @@ public class MyController {
 	@GET
 	@Path("login")
 	public String getLogin() {
-		loginUser.setName(null);
+		loginUserModel.setName(null);
 		return "login.jsp";
 	}
 
 	@POST
 	@Path("login")
 	public String postLogin(@BeanParam UserDTO userDTO) {
-		if (userDTO.getName().equals("kcg") && userDTO.getPassword().equals("foo")) {
-			loginUser.setName(userDTO.getName());			
+		var name = userDTO.getName();
+		var password = userDTO.getPassword();
+		if(password.equals(usersModel.getPassword(name))){
+			loginUserModel.setName(name);
 			return "redirect:list";
 		}
-
 		errorBean.setMessage("ユーザ名またはパスワードが異なります");
 		return "redirect:login";
 	}

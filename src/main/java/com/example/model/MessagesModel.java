@@ -1,6 +1,5 @@
 package com.example.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import jakarta.inject.Named;
@@ -12,5 +11,5 @@ import jakarta.mvc.RedirectScoped;
  */
 @RedirectScoped
 @Named
-public class Messages extends ArrayList<MessageDTO> implements Serializable {
+public class MessagesModel extends ArrayList<MessageDTO> {
 }
