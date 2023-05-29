@@ -9,11 +9,13 @@ import javax.sql.DataSource;
 import jakarta.annotation.Resource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 
 /**
  * DAO for messages table
  */
 @ApplicationScoped
+@NoArgsConstructor(force = true)
 public class MessagesDAO {
 	/**
 	 * JNDIで管理されたDataSourceオブジェクトは@Resourceアノテーションで
@@ -23,8 +25,12 @@ public class MessagesDAO {
 	private DataSource ds;
 
 	// JSP側へデータを渡すために用いる。
+	private final Messages messages;
+
 	@Inject
-	private Messages messages;
+	public MessagesDAO(Messages messages) {
+		 this.messages = messages;
+	}
 
 	public void getAll() {
 		// リダイレクト先で呼ばれた場合は無視する。
