@@ -51,11 +51,9 @@ public class MessagesDAO {
 	public void search(String keyword) {
 		try (
 				Connection conn = ds.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages WHERE message LIKE ?");) {
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages WHERE message LIKE %?%");) {
 			// 部分一致で検索する場合、LIKEの後には'%キーワード%'と書く。
-			// 以下、文字列に文字列を埋め込むためのフォーマット指定子は%s
-			// フォーマット指定子%をエスケープするには%%と書く
-			pstmt.setString(1, "%%%s%%".formatted(keyword));
+			pstmt.setString(1, keyword);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				messagesModel.add(new MessageDTO(
@@ -72,7 +70,7 @@ public class MessagesDAO {
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn
-						.prepareStatement("INSERT INTO messages(name, message) VALUES(?, ?)")) {
+						.prepareStatement("INSERT INTO messages(name, message) VALUES(?, ?)");) {
 			pstmt.setString(1, mesDTO.getName());
 			pstmt.setString(2, mesDTO.getMessage());
 			pstmt.executeUpdate();
