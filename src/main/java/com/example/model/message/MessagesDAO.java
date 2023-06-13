@@ -51,7 +51,7 @@ public class MessagesDAO {
 	public void search(String keyword) {
 		try (
 				Connection conn = ds.getConnection();
-				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages WHERE message LIKE %?%");) {
+				PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM messages WHERE message LIKE %%?%%");) {
 			// 部分一致で検索する場合、LIKEの後には'%キーワード%'と書く。
 			pstmt.setString(1, keyword);
 			ResultSet rs = pstmt.executeQuery();

@@ -16,6 +16,11 @@
 		<button>送信</button>
 	</form>
 
+	<form action="${mvc.basePath}/search" method="POST">
+		検索：<input type="text" name="keyword">
+		<button>検索</button>
+	</form>
+
 	<form action="${mvc.basePath}/clear" method="GET">
 		<button>Clear</button>
 	</form>

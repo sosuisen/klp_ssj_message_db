@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
 import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -75,6 +76,13 @@ public class MyController {
 		mes.setName(loginUserModel.getName());
 		messagesDAO.create(mes);
 		return "redirect:list";
+	}
+
+	@POST
+	@Path("search")
+	public String searchMessage(@FormParam("keyword") String keyword) {
+		messagesDAO.search(keyword);
+		return "list.jsp";
 	}
 
 	@GET
