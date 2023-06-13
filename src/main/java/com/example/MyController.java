@@ -1,11 +1,11 @@
 package com.example;
 
 import com.example.model.ErrorBean;
-import com.example.model.LoginUserModel;
-import com.example.model.MessageDTO;
-import com.example.model.MessagesDAO;
-import com.example.model.UserDTO;
-import com.example.model.UsersModel;
+import com.example.model.message.MessageDTO;
+import com.example.model.message.MessagesDAO;
+import com.example.model.user.LoginUserModel;
+import com.example.model.user.UserDTO;
+import com.example.model.user.UsersModel;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -33,9 +33,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 @Path("/")
 public class MyController {
-	private final MessagesDAO messagesDAO;
-
 	private final Models models;
+
+	private final MessagesDAO messagesDAO;
 
 	private final LoginUserModel loginUserModel;
 

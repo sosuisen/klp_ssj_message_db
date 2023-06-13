@@ -1,4 +1,4 @@
-package com.example.model;
+package com.example.model.user;
 
 import jakarta.ws.rs.FormParam;
 import lombok.Data;

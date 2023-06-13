@@ -9,7 +9,8 @@
 <title>メッセージの累積</title>
 </head>
 <body>
-	${loginUserModel.name}さん、こんにちは！<br>
+	${loginUserModel.name}さん、こんにちは！
+	<br>
 	<form action="${mvc.basePath}/list" method="POST">
 		メッセージ：<input type="text" name="message">
 		<button>送信</button>
