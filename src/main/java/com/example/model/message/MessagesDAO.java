@@ -49,7 +49,7 @@ public class MessagesDAO {
 		return messagesModel;
 	}
 
-	public void create(MessageDTO mesDTO) throws Exception {
+	public void create(MessageDTO mesDTO) throws SQLException {
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn
@@ -57,18 +57,18 @@ public class MessagesDAO {
 			pstmt.setString(1, mesDTO.getName());
 			pstmt.setString(2, mesDTO.getMessage());
 			pstmt.executeUpdate();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
 		}
 	}
 
-	public void deleteAll() throws Exception {
+	public void deleteAll() throws SQLException {
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("DELETE from messages");) {
 			pstmt.executeUpdate();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
 		}

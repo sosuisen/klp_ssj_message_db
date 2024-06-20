@@ -99,7 +99,7 @@ public class MyController {
 			messagesDAO.create(mes);
 			// 	リダイレクトは "redirect:リダイレクト先のパス"
 			return "redirect:list";
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			log.log(Level.SEVERE, "Error in postMessage()", e);
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
@@ -111,7 +111,7 @@ public class MyController {
 		try {
 			messagesDAO.deleteAll();
 			return "redirect:list";
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			log.log(Level.SEVERE, "Error in clearMessage()", e);
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
