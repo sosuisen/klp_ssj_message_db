@@ -3,6 +3,7 @@ package com.example.model.message;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.sql.DataSource;
@@ -29,7 +30,7 @@ public class MessagesDAO {
 		this.ds = ds;
 	}
 
-	public ArrayList<MessageDTO> getAll() {
+	public ArrayList<MessageDTO> getAll() throws SQLException {
 		var messagesModel = new ArrayList<MessageDTO>();
 		try (
 				Connection conn = ds.getConnection();
@@ -41,13 +42,14 @@ public class MessagesDAO {
 						rs.getString("name"),
 						rs.getString("message")));
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw e;
 		}
 		return messagesModel;
 	}
 
-	public void create(MessageDTO mesDTO) {
+	public void create(MessageDTO mesDTO) throws Exception {
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn
@@ -57,16 +59,18 @@ public class MessagesDAO {
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 	}
 
-	public void deleteAll() {
+	public void deleteAll() throws Exception {
 		try (
 				Connection conn = ds.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement("DELETE from messages");) {
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 	}
 }

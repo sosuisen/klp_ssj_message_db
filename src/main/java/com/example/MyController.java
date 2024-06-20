@@ -1,5 +1,8 @@
 package com.example;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+
 import com.example.model.ErrorBean;
 import com.example.model.message.MessageDTO;
 import com.example.model.message.MessagesDAO;
@@ -11,11 +14,15 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 
 /**
  * Jakarta MVCのコンロトーラクラスです。@Controllerアノテーションを付けましょう。
@@ -32,6 +39,7 @@ import lombok.NoArgsConstructor;
 @Controller
 @RequestScoped
 @NoArgsConstructor(force = true)
+@Log
 @Path("/")
 public class MyController {
 	private final Models models;
@@ -47,12 +55,16 @@ public class MyController {
 	// @Injectはコンストラクタインジェクションを用いるのが定石です。
 	@Inject
 	public MyController(Models models, LoginUserModel loginUserModel, 
-			ErrorBean errorBean, UsersModel usersModel, MessagesDAO messagesDAO) {
+			ErrorBean errorBean, UsersModel usersModel, MessagesDAO messagesDAO,
+			HttpServletRequest req) {
 		this.models = models;
 		this.loginUserModel = loginUserModel;
 		this.errorBean = errorBean;
 		this.usersModel = usersModel;
 		this.messagesDAO = messagesDAO;
+		log.log(Level.INFO, "[ip]%s [url]%s".formatted(
+				req.getRemoteAddr(),
+				req.getRequestURL().toString()));
 	}
 
 	/**
@@ -70,24 +82,39 @@ public class MyController {
 		if(loginUserModel.getName() == null) {
 			return "redirect:login";
 		}
-		models.put("messages", messagesDAO.getAll());
-		return "list.jsp";
+		try {
+			models.put("messages", messagesDAO.getAll());
+			return "list.jsp";
+		} catch (SQLException e) {
+			log.log(Level.SEVERE, "Error in getMessage()", e);
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@POST
 	@Path("list")
 	public String postMessage(@BeanParam MessageDTO mes) {
 		mes.setName(loginUserModel.getName());
-		messagesDAO.create(mes);
-		// リダイレクトは "redirect:リダイレクト先のパス"
-		return "redirect:list";
+		try {
+			messagesDAO.create(mes);
+			// 	リダイレクトは "redirect:リダイレクト先のパス"
+			return "redirect:list";
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error in postMessage()", e);
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GET
 	@Path("clear")
 	public String clearMessage() {
-		messagesDAO.deleteAll();
-		return "redirect:list";
+		try {
+			messagesDAO.deleteAll();
+			return "redirect:list";
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error in clearMessage()", e);
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@GET
