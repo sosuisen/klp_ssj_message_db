@@ -15,7 +15,7 @@ public class H2DataSource {
 	/**
 	 * JNDIで管理されたDataSourceオブジェクトは@Resourceアノテーションで
 	 * 注入できます。lookup属性でJNDI名を渡します。
-	 * （簡単に書けますが、コンストラクタインジェクションできないので使いずらい面もあります。）
+	 * （簡単に書けますが、コンストラクタインジェクションできないので使いにくい面もあります。）
 	 */
 	@Resource(lookup = "jdbc/__default")
 	private DataSource ds;
