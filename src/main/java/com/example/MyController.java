@@ -12,10 +12,10 @@ import jakarta.inject.Inject;
 import jakarta.mvc.Controller;
 import jakarta.mvc.Models;
 import jakarta.ws.rs.BeanParam;
-import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.QueryParam;
 import lombok.NoArgsConstructor;
 
 /**
@@ -84,9 +84,9 @@ public class MyController {
 		return "redirect:list";
 	}
 	
-	@POST
+	@GET
 	@Path("search")
-	public String postSearch(@FormParam("keyword") String keyword) {		
+	public String getSearch(@QueryParam("keyword") String keyword) {		
 		models.put("messages", messagesDAO.search(keyword));
 		return "list.jsp";
 	}
